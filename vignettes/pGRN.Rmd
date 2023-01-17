@@ -1,0 +1,56 @@
+---
+title: "pGRN: scRNA-Seq Pseudotime Based Gene Regulatory Netowrk Inference"
+author: "Gangcai Xie"
+date: "2023-01-03"
+output: html_document
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{pGRN}
+  %\usepackage[UTF-8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading the example data
+
+pGRN package pre-loaded with pGRNDB data with both of expression matrix and pseudotime information. You can simply load this data by calling pGRNDB.
+
+```{r loading data}
+# loading pGRN package
+library(pGRN)
+
+# loading pre-build data
+example_data <- pGRNDB
+names(example_data)
+expression_matrix <- example_data[["expression"]]
+pseudotime_list <- example_data[["ptime"]]$PseudoTime
+```
+
+## Call pGRN
+
+Currently, two methods "DTW" and "granger" were available for pGRN network construction.
+
+```{r call pGRN}
+# try DTW method
+nets_dtw <- pGRN(expression_matrix,pseudotime_list, method= "DTW",quantile_cutoff=50)
+
+# try granger method
+nets_gg <- pGRN(expression_matrix,pseudotime_list, method= "granger")
+
+```
+
+## plot the network
+
+pGRN provides methods for visualize the network either stationary or interactively.
+
+```{r plot network}
+# plot network stationarily
+plot_network(nets_dtw[[1]])
+plot_network(nets_gg[[1]])
+
+# plot network interactively
+#plot_network_i(nets_dtw[[1]])
+#plot_network_i(nets_gg[[1]])
+```
